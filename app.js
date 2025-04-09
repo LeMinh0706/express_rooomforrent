@@ -34,6 +34,8 @@ app.use('/', indexRouter);
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/users'));
 app.use('/role', require('./routes/roles'));
+app.use('/review', require('./routes/reviews'))
+app.use('/service', require('./routes/services'))
 
 
 app.use(function(req, res, next) {

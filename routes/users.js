@@ -20,7 +20,7 @@ let storage = multer.diskStorage({
       (new Date(Date.now())).getTime() + '-' + file.originalname
   )
 })
-//upload
+//upload gi?
 let upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
