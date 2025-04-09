@@ -3,7 +3,7 @@ let roomTypeSchema = mongoose.Schema({
     typeName:{
         type:String,
         required:true,
-        unique:true
+        unique: [true, "Loại phòng đã tồn tại"]
     },
     isDeleted:{
         type:Boolean,
