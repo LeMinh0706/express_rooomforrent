@@ -3,7 +3,7 @@ let serviceSchema = mongoose.Schema({
     serviceName:{
         type:String,
         required:true,
-        unique:true
+        unique: [true, "Dịch vụ đã tồn tại"]
     },
     price:{
         type:Number,

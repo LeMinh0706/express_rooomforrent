@@ -3,7 +3,7 @@ let postCategorySchema = mongoose.Schema({
     categoryName:{
         type:String,
         required:true,
-        unique:true
+        unique: [true, "Loại bài đăng đã tồn tại"]
     },
     isDeleted:{
         type:Boolean,
