@@ -5,12 +5,17 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose')
 let {CreateErrorRes} = require('./utils/responseHandler')
+const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 
 
 var app = express();
 
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}));
 mongoose.connect("mongodb://localhost:27017/rentroom");
 mongoose.connection.on('connected',()=>{
   console.log("connected");
@@ -26,10 +31,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/auth', require('./routes/auth'));
+app.use('/user', require('./routes/users'));
+app.use('/role', require('./routes/roles'));
+app.use('/room', require('./routes/roomType'));
+app.use('/category', require('./routes/postCategory'));
+app.use('/service', require('./routes/services'));
+app.use('/post', require('./routes/post'));
+app.use('/invoice', require('./routes/invoice'));
+app.use('/review', require('./routes/reviews'));
 
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
