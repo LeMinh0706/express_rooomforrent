@@ -34,7 +34,12 @@ app.use('/', indexRouter);
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/users'));
 app.use('/role', require('./routes/roles'));
-app.use('/review', require('./routes/reviews'))
+app.use('/room', require('./routes/roomType'));
+app.use('/category', require('./routes/postCategory'));
+app.use('/service', require('./routes/services'));
+app.use('/post', require('./routes/post'));
+app.use('/invoice', require('./routes/invoice'));
+app.use('/review', require('./routes/reviews'));
 app.use('/service', require('./routes/services'))
 
 

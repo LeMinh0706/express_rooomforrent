@@ -59,7 +59,7 @@ module.exports = {
             return await servicesModel.findByIdAndUpdate(
                 id, {
                 isDeleted: !service.isDeleted
-            }
+            },{new: true }
             )
         } catch (error) {
             throw new Error(error.message)

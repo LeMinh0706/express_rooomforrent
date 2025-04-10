@@ -17,5 +17,20 @@ module.exports = {
        } catch (error) {
         throw new Error(error.message)
        }
+    },
+    UpdateARole: async function (id, body) {
+        try {
+            let role = await roleModel.findById(id);
+            let allowField = ["roleName"]
+            for (const key of Object.keys(body)) {
+                if (allowField.includes(key)) {
+                    role[key] = body[key];
+                }
+            }
+            return await role.save();
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    },
     }
 }

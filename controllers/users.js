@@ -1,6 +1,13 @@
 let userModel = require('../schemas/user')
 let roleModel = require('../schemas/role')
-let bcrypt = require('bcrypt')
+let bcrypt = require('bcrypt');
+const {sendmail} = require('../utils/sendmail');
+
+const otpStorage = new Map();
+const otpExpirationTime = new Map();
+const OTP_EXPIRATION_TIME = 60 * 1000;
+
+
 
 module.exports = {
     GetAllUsers: async function (status, currentPage = 1, limit = 3) {
@@ -29,13 +36,6 @@ module.exports = {
     GetUserByEmail: async function (email) {
         return await userModel.findOne({
             email:email
-        }).populate({
-            path:'role',select:'roleName'
-        });
-    },
-    GetUserByToken: async function (token) {
-        return await userModel.findOne({
-            resetPasswordToken:token
         }).populate({
             path:'role',select:'roleName'
         });
@@ -71,7 +71,7 @@ module.exports = {
     },
     UpdateAnUser: async function (user, body) {
         try {
-            let allowField = ["password", "email", "avatar","phoneNumber","city","district","ward","address", "role"]
+            let allowField = ["email", "avatar","phoneNumber","city","district","ward","address", "role"]
             for (const key of Object.keys(body)) {
                 if (allowField.includes(key)) {
                     user[key] = body[key];
@@ -88,7 +88,8 @@ module.exports = {
             return await userModel.findByIdAndUpdate(
                 id, {
                 isDeleted: !user.isDeleted,
-            }
+
+            },{new: true }
             )
         } catch (error) {
             throw new Error(error.message)
@@ -114,7 +115,48 @@ module.exports = {
             user.password = newpassword;
             return await user.save();
         }else{
-            throw new Error('oldpassword khong dung')
+            throw new Error('Mật khẩu hiện tại không đúng')
+        }
+    },
+    ChangePasswordOTP: async function(email,newpassword){
+        let user = await userModel.findOne({
+            email: email
+        })
+        user.password = newpassword;
+        return await user.save();
+        
+    },
+    sendOTPMail: async function(email){
+        let user = await userModel.findOne({
+            email: email
+        })
+        if(!user){
+            throw new Error('Người dùng không tồn tại')
+        }
+        const otp = this.generateOtp();
+        otpStorage.set(email, otp);
+        otpExpirationTime.set(email, Date.now() + OTP_EXPIRATION_TIME);
+        console.log(otp)
+        await sendmail(email,"OTP xác thực",otp)
+    },
+    generateOtp: function() {
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        return otp.toString();
+    },
+    vetifyOTPMail: async function(otp,email){
+        const storedOtp = otpStorage.get(email);
+        const expiration = otpExpirationTime.get(email);
+        if (!storedOtp || !expiration || Date.now() > expiration) {
+            otpStorage.delete(email);
+            otpExpirationTime.delete(email);
+            throw new Error ('OTP hết hạn hoặc không hợp lệ' );
+        }
+        if (storedOtp === otp) {
+            otpStorage.delete(email);
+            otpExpirationTime.delete(email);
+        } else {
+            throw new Error ('OTP không chính xác' );
+
         }
     },
 }

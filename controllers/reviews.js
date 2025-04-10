@@ -1,10 +1,12 @@
+
 var reviewsModel = require('../schemas/reviews')
 module.exports = {
     GetReviewsByUser: async function(userId, currentPage = 1, limit = 5){
         let reviews =  await reviewsModel.find({
             isDeleted: false,
             reviewedUser: userId
-        }).populate({
+        }).sort({ createdAt: -1 }) 
+        .populate({
             path: 'user', 
             select: 'userName avatar'  
         });;
