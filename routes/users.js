@@ -21,6 +21,7 @@ let storage = multer.diskStorage({
   )
 })
 //upload
+
 let upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {

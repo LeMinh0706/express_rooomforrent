@@ -9,7 +9,7 @@ let crypto = require('crypto')
 let { check_authentication } = require('../utils/check_auth');
 const { validatorSigup, validate, validatorEdit } = require('../utils/validators');
 
-/* GET home page. */
+
 router.post('/login', async function (req, res, next) {
     try {
         let body = req.body;
@@ -43,12 +43,14 @@ router.post('/signup',validatorSigup,validate, async function (req, res, next) {
         //     id: newUser._id,
         //     expire: (new Date(Date.now() + 60 * 60 * 1000)).getTime()
         // }, constants.SECRET_KEY), 200);
+
         CreateSuccessRes(res,newUser,200);
     } catch (error) {
         console.log(error);
         next(error)
     }
 })
+
 router.put('/changepassword', check_authentication,validatorEdit,validate, async function (req, res, next) {
     try {
         let body = req.body;
@@ -143,5 +145,4 @@ router.post('/verify-otp', async (req, res, next) => {
 
 
 
-//67de10517282904fbca502ae
 module.exports = router;

@@ -7,6 +7,8 @@ const otpStorage = new Map();
 const otpExpirationTime = new Map();
 const OTP_EXPIRATION_TIME = 60 * 1000;
 
+
+
 module.exports = {
     GetAllUsers: async function (status, currentPage = 1, limit = 3) {
         let users = await userModel.find({ isDeleted: status })
@@ -86,6 +88,7 @@ module.exports = {
             return await userModel.findByIdAndUpdate(
                 id, {
                 isDeleted: !user.isDeleted,
+
             },{new: true }
             )
         } catch (error) {
@@ -153,6 +156,7 @@ module.exports = {
             otpExpirationTime.delete(email);
         } else {
             throw new Error ('OTP không chính xác' );
+
         }
     },
 }

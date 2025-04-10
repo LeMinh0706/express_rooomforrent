@@ -2,6 +2,7 @@ let jwt = require('jsonwebtoken')
 let constants = require('../utils/constants')
 let userController = require('../controllers/users');
 let postController = require('../controllers/post')
+
 const e = require('express');
 module.exports = {
     check_authentication: async function (req, res, next) {
